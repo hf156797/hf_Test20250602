@@ -377,26 +377,36 @@ app.get('/kreditBeantragen', (req, res) => {
 });
 
 
-// Kommentar: 
+// Kommentar:Die Route verarbeitet das Absenden des Kreditformulars per POST-Anfrage.
+// Die Funktion nimmt die vom Nutzer eingegebenen Werte entgegen und berechnet das Ergebnis.
 app.post('/kreditBeantragen', (req, res) => {
 
-	// Kommentar:
+	// Kommentar: Die Werte für Betrag, Laufzeit und Zinssatz werden aus dem Request-Body gelesen.
+    // Diese Werte stammen aus dem vom Nutzer ausgefüllten Formular.
 	let zinsbetrag = req.body.Betrag;
 	let laufzeit = req.body.Laufzeit;
 	let zinssatz = req.body.Zinssatz;
 
-	// Kommentar:
+	// Kommentar: Der Rückzahlungsbetrag wird mit der Zinseszinsformel berechnet.
+    // Das Ergebnis gibt an, wie viel der Kunde am Ende der Laufzeit zurückzahlen muss.
 	let kredit = zinsbetrag * Math.pow(1+zinssatz/100,laufzeit);
+
+	// Der berechnete Rückzahlungsbetrag wird kaufmännisch auf zwei Nachkommastellen gerundet.
+// Das Ergebnis wird als String mit genau zwei Nachkommastellen formatiert.
+let kreditGerundet = kredit.toFixed(2);
 	
-	// Kommentar:
+	// Kommentar: Der berechnete Rückzahlungsbetrag wird zur Kontrolle auf der Konsole ausgegeben.
+    // Dies dient der Überprüfung der Berechnung während der Entwicklung.
 	console.log("Rückzahlungsbetrag: " + kredit + " €.")
 
-	// Kommentar:
+	// Kommentar: Die Seite 'kreditBeantragen.ejs' wird mit den aktuellen Werten und dem Ergebnis gerendert.
+    // Die berechnete Meldung wird an die View übergeben, damit sie dem Nutzer angezeigt wird.
 	res.render('kreditBeantragen.ejs',{
 		Laufzeit: laufzeit,
 		Zinssatz: zinssatz,		
 		Betrag: zinsbetrag,
-		// Kommentar:
+		// Kommentar: Die Meldung enthält den Rückzahlungsbetrag, der dem Nutzer angezeigt wird.
+        // Das Ergebnis wird als Text an die View übergeben.
 		Meldung: "Rückzahlungsbetrag: " + kredit + " €."
 	});
 });
